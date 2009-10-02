@@ -1,6 +1,6 @@
 = Introduction =
 
- A client to login IP gateway of Peking University.
+A client to login IP gateway of Peking University.
 
 = Platform =
 
