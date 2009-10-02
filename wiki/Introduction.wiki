@@ -5,3 +5,8 @@
 = Contents =
 
   * [wxPKUIPGW]: A client to login IP gateway of Peking University.
+  * [pkuIPGW]:  A Symbian client to login IP gateway of Peking University.
+  * [gCalSync]: A Symbian tool to upload Symbian Calendar Event to Google Calendar.
+  * [DateDuration]: A Symbian program to calculate days between two dates.
+  * [WindowsTime]: A tool to show how long a windows has been installed.(Windows Only)
+  * [ChangeWinIP]: A tool to change the IP of windows.(Windows Only)
