@@ -10,4 +10,4 @@
   * [ChangeWinIP]: A tool to change the IP of windows.(Windows Only)
 
 = Dependency =
-  The programs for Symbian are developed at PyS60 version 1.9.x. You can download it from [https://garage.maemo.org/projects/pys60/]. You can also download the .sis files needed from [http://code.google.com/p/pytoolkits/downloads/list Downloads]
+  The programs for Symbian are developed at pys60 version 1.9.x. You can download it from [https://garage.maemo.org/projects/pys60/]. You can also download the .sis files needed from [http://code.google.com/p/pytoolkits/downloads/list Downloads]
