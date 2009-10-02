@@ -1,9 +1,7 @@
 = Introduction =
-
   This project is created to host some useful programs for Linux, Windows, Symbian. The implement language is Python.
 
 = Contents =
-
   * [wxPKUIPGW]: A client to login IP gateway of Peking University.
   * [pkuIPGW]:  A Symbian client to login IP gateway of Peking University.
   * [gCalSync]: A Symbian tool to upload Symbian Calendar Event to Google Calendar.
@@ -12,5 +10,4 @@
   * [ChangeWinIP]: A tool to change the IP of windows.(Windows Only)
 
 = Dependency =
- 
-  The programs for Symbian are developed at PyS60 version 1.9.x. You can download it from [https://garage.maemo.org/projects/pys60/].
+  The programs for Symbian are developed at PyS60 version 1.9.x. You can download it from [https://garage.maemo.org/projects/pys60/]. You can also download the .sis files needed from [http://code.google.com/p/pytoolkits/downloads/list Downloads]
