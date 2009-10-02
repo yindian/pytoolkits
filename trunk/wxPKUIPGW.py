@@ -38,124 +38,117 @@ import pickle
 
 class PasswordManger(object):
 	def __init__(self):
-		self.regpath="Software\\pyIPGW"
-		self.conffile="/.pyipgw.conf"
-		self.username=""
-		self.password=""
+		self.regpath = "Software\\pyIPGW"
+		self.conffile = "/.pyipgw.conf"
+		self.username = ""
+		self.password = ""
 		
 	def getinfo(self):
 		try:
 			import _winreg
-			hkey = _winreg.CreateKey(_winreg.HKEY_CURRENT_USER,self.regpath)
+			hkey = _winreg.CreateKey(_winreg.HKEY_CURRENT_USER, self.regpath)
 			if hkey:
-				username, type = _winreg.QueryValueEx(hkey,"username")
-				password, type = _winreg.QueryValueEx(hkey,"password")
-				return username,password
+				username, type = _winreg.QueryValueEx(hkey, "username")
+				password, type = _winreg.QueryValueEx(hkey, "password")
+				return username, password
 		except:
 			try:
-				path=os.environ['HOME']+self.conffile
-				string=open(path).read()
-				pwm=pickle.loads(string)
-				return pwm.username,pwm.password
+				path = os.environ['HOME']+self.conffile
+				string = open(path).read()
+				pwm = pickle.loads(string)
+				return pwm.username, pwm.password
 			except:
 				raise Exception("Can not get username and password")
 
-	def setinfo(self,username,password):
+	def setinfo(self, username, password):
 		try:
 			import _winreg
-			hkey = _winreg.CreateKey(_winreg.HKEY_CURRENT_USER,self.regpath)
+			hkey = _winreg.CreateKey(_winreg.HKEY_CURRENT_USER, self.regpath)
 			if hkey:
-				_winreg.SetValueEx(hkey,"username",0,_winreg.REG_SZ,username)
-				_winreg.SetValueEx(hkey,"password",0,_winreg.REG_SZ,password)
+				_winreg.SetValueEx(hkey,"username", 0, _winreg.REG_SZ, username)
+				_winreg.SetValueEx(hkey,"password", 0, _winreg.REG_SZ, password)
 		except:
 			try:
-				path=os.environ['HOME']+self.conffile
-				self.username=username
-				self.password=password
-				string=pickle.dump(self,open(path,"w"))
+				path = os.environ['HOME']+self.conffile
+				self.username = username
+				self.password = password
+				string = pickle.dump(self, open(path,"w"))
 			except:
 				raise Exception("Can not save useranme and password")
 
 class IPGWClient(object):
 	def __init__(self, passwdm):
-		self.cj=cookielib.CookieJar()
-		self.opener=urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
-		self.magicString="|;kiDrqvfi7d$v0p5Fg72Vwbv2;|"
-		self.infopattern=re.compile(r'<!--IPGWCLIENT_START (.*) IPGWCLIENT_END-->')
-		self.username=""
-		self.password=""
-		self.passwdm=passwdm
-		self.logged=False
+		self.cj = cookielib.CookieJar()
+		self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
+		self.magicString = "|;kiDrqvfi7d$v0p5Fg72Vwbv2;|"
+		self.infopattern = re.compile(r'<!--IPGWCLIENT_START (.*) IPGWCLIENT_END-->')
+		self.username = ""
+		self.password = ""
+		self.passwdm = passwdm
+		self.logged = False
 		
 	def open(self):
-		self.username,self.password=self.passwdm.getinfo()
+		self.username, self.password=self.passwdm.getinfo()
 		
 	def close(self):
-		self.passwdm.setinfo(self.username,self.password)
+		self.passwdm.setinfo(self.username, self.password)
 		
-	def setinfo(self,username,passwd):
-		self.username,self.password=username,passwd
+	def setinfo(self, username, passwd):
+		self.username, self.password=username, passwd
 		
 	def doConnect(self, free=True):
 		if not self.logged:
 			self.__login()
 		self.doDisconnect()
 		if free:
-			resp=self.opener.open("https://its.pku.edu.cn/netportal/ipgwopen")
+			resp = self.opener.open("https://its.pku.edu.cn/netportal/ipgwopen")
 		else:
-			resp=self.opener.open("https://its.pku.edu.cn/netportal/ipgwopenall")
-		content=resp.read()
-		info=self.infopattern.search(content).group(1)
+			resp = self.opener.open("https://its.pku.edu.cn/netportal/ipgwopenall")
+		content = resp.read()
+		info = self.infopattern.search(content).group(1)
 		return self.__parse(info)
 
 	def doDisconnect(self, all = True):
 		if not self.logged:
 			self.__login()
 		if all:
-			resp=self.opener.open("https://its.pku.edu.cn/netportal/ipgwcloseall")
+			resp = self.opener.open("https://its.pku.edu.cn/netportal/ipgwcloseall")
 		else:
-			resp=self.opener.open("https://its.pku.edu.cn/netportal/ipgwclose")
-		content=resp.read()
-		info=self.infopattern.search(content).group(1)
+			resp = self.opener.open("https://its.pku.edu.cn/netportal/ipgwclose")
+		content = resp.read()
+		info = self.infopattern.search(content).group(1)
 		return self.__parse(info)
 
 	def __parse(self, info):
 		ret=''
-		retDict={}
-		info=info.strip()
+		info = info.strip()
 		for item in info.split(' '):
 			item = item.split('=')
 			if len(item) == 1:
 				item.append("")
-			retDict[item[0]] = item[1]
 			ret += "%15s: %s\n" % (item[0], item[1])
 		return ret
 
 	def __login(self):
-		self.logged=False
-		resp=self.opener.open("https://its.pku.edu.cn/cas/login")
-		info=resp.read()
-		data={}
-		ltR = re.compile(r'name="lt" value="([^"]+)"')
-		lN = ltR.search(info)
-		data['lt'] = lN.group(1)
-		data['username1']=self.username
-		data['password']=self.password
-		data['iprd']='open'
-		data['fwrd']='free'
-		data['imageField.x']=7
-		data['imageField.y']=3
-		data['_currentStateId']='viewLoginForm'
-		data['_eventId']='submit'
-		data['username']=self.username+self.magicString+self.password+self.magicString+'2'
+		self.logged = False
+		resp = self.opener.open("https://its.pku.edu.cn/cas/login")
+		info = resp.read()
+		data = {}
+		ltpattern = re.compile(r'name="lt" value="([^"]+)"')
+		data['lt'] = ltpattern.search(info).group(1)
+		data['username1'] = self.username
+		data['password'] = self.password
+		data['_currentStateId'] = 'viewLoginForm'
+		data['_eventId'] = 'submit'
+		data['username'] = self.username+self.magicString+self.password+self.magicString+'2'
 		querystring = urllib.urlencode(data)
 		resp = self.opener.open("https://its.pku.edu.cn/cas/login",querystring)
 		content = resp.read()
 		if content.find('Username or Password error!') != -1:
 			raise Exception("Username or Password error")
-		resp=self.opener.open("https://its.pku.edu.cn/netportal/")
+		resp = self.opener.open("https://its.pku.edu.cn/netportal/")
 		resp.read()
-		self.logged=True
+		self.logged = True
 
 import wx
 
