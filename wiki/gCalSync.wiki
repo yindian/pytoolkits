@@ -1,0 +1,7 @@
+= Introduction =
+
+A tool to upload Symbian Calendar Event to Google Calendar
+
+= Platform =
+
+Symbian, S60
