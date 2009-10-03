@@ -1,7 +1,0 @@
-= Introduction =
-
-A tool to change the IP of windows.
-
-= Platform =
-
-Windows
