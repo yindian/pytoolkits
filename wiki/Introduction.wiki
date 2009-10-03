@@ -7,7 +7,6 @@
   * [gCalSync]: A Symbian tool to upload Symbian Calendar Event to Google Calendar.
   * [DateDuration]: A Symbian program to calculate days between two dates.
   * [WindowsTime]: A tool to show how long a windows has been installed.(Windows Only)
-  * [ChangeWinIP]: A tool to change the IP of windows.(Windows Only)
 
 = Dependency =
   The programs for Symbian are developed at pys60 version 1.9.x. You can download it from [https://garage.maemo.org/projects/pys60/]. You can also download the .sis files needed from [http://code.google.com/p/pytoolkits/downloads/list Downloads]
