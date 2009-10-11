@@ -33,7 +33,13 @@ Backup the Contacts of a Symbian to the s60spot
 
 HOSTNAME=""
 POSTURL=""
+USERNAME=""
+PASSWORD=""
+EncrptyKey=""
+
 import httplib, mimetypes
+import socket
+socket.setdefaulttimeout(15)
 
 def post_multipart(host, selector, fields, files):
     """
@@ -49,7 +55,6 @@ def post_multipart(host, selector, fields, files):
     h.putheader('content-length', str(len(body)))
     h.endheaders()
     h.send(body)
-    #errcode, errmsg, headers = h.getreply()
     resp=h.getresponse()
     return resp
 
@@ -84,27 +89,56 @@ def get_content_type(filename):
 
 import contacts
 import pickle
+import appuifw
 
-class S60Contact(obj):
-	"""Adapter Class"""
-	def __init__(self,name,phone):
-		pass
-
-def getAllContact():
+def getContactsData():
 	db = contacts.open()
 	all=[]
-	for c in db:
-		pass
+	for id in db:
+		s60contact=db[id]
+		first_name=""
+		last_name=""
+		phonenum=""
+		try:
+			first_name=s60contact.find(type="first_name")[0].value
+		except:
+			pass
+		try:
+			last_name=s60contact.find(type="last_name")[0].value
+		except:
+			pass
+		try:
+			phonenum=s60contact.find(type="mobile_number")[0].value
+		except:
+			pass
+		all.append((first_name, last_name, phonenum))
 	return pickle.dumps(all)
-	
-def upload(data):
+
+def UploadData(data):
 	postdata=[]
 	postdata.append(("contact", "conctact.db", data))
 	resp = post_multipart(HOSTNAME, POSTURL, [], postdata)
+	if resp.status == 200:
+		return True
+	else:
+		return False
 
 def main():
-	data = getAllContact()
-	upload(data)
-	
+	data = getContactsData()
+	ap_names = []
+	ap_list_of_dicts = socket.access_points()
+	for item in ap_list_of_dicts:
+		ap_names.append(item['name'])
+	ap_offset = appuifw.popup_menu(ap_names, u"Select default access point")
+	if ap_offset is None:
+		appuifw.note(u"Cancelled")
+		return
+	socket.set_default_access_point(ap_names[ap_offset])
+	status=UploadData(data)
+	if status:
+		appuifw.note(u"Backup Successfully")
+	else:
+		appuifw.note(u"Failed, unknown error")
+
 if __name__=="__main__":
 	main()
