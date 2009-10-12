@@ -118,6 +118,9 @@ def main():
         for item in ap_list_of_dicts:
             ap_names.append(item['name'])
         ap_offset = appuifw.popup_menu(ap_names, u"Select default access point")
+        if ap_offset is None:
+        	appuifw.note(u"Cancelled!")
+        	return
         socket.set_default_access_point(ap_names[ap_offset])
         u=appuifw.query(u'email','text',u"@gmail.com")
         p=appuifw.query(u'password','code',u"")
