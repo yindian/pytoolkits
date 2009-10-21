@@ -132,15 +132,20 @@ def main():
         p=p.encode("utf8")
         n=n.encode("utf8")
         feedloc = '/calendar/feeds/'+u+'/private/full'
-        auth = GoogleAuth( u, p )
-        sess = SessionUrl( auth, feedloc )
-        for entry in entries:
-            event = cal[entry['id']]
-            dict = dictFromS60Event(event)
-            entry = atomEntryFromDict(u,p,n,dict)
-            entry=entry.encode("utf8")
-            insertGcal(entry,sess,auth)
-            print "Added : " + event.content
+        try:
+        	auth = GoogleAuth( u, p )
+        	sess = SessionUrl( auth, feedloc )
+        	for entry in entries:
+        		event = cal[entry['id']]
+        		dict = dictFromS60Event(event)
+        		entry = atomEntryFromDict(u,p,n,dict)
+        		entry=entry.encode("utf8")
+        		insertGcal(entry,sess,auth)
+        		print "  Added : " + event.content
+        	print "OK"
+        except Exception,msg:
+        	#print msg
+        	appuifw.note(u"Error")
 
 if __name__=="__main__":
     main()
