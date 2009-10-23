@@ -2,7 +2,7 @@
 
 A Symbian tool to backup the contact list to net.
 
-= Details =
+= Platform =
 
 Symbian S60
 
