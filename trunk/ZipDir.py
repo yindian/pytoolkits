@@ -34,11 +34,14 @@ import os
 import pickle
 
 class ZipDir(object):
+	"""
+	zip a directory to splited zip files, with indexes
+	"""
 	def __init__(self,name,destdir):
 		self.dirname=name
 		self.destdir=destdir
 		self.filelist=[]
-		self.FILESIZELIMIT=1000000
+		self.FILESIZELIMIT=950000
 		
 	def getFileList(self):
 		self.filelist=[]
@@ -55,7 +58,7 @@ class ZipDir(object):
 		bookindex={}
 		index=0
 		zipname="%s%d.zip"%(self.destdir,index)
-		result=zipfile.ZipFile(zipname, "w")
+		result=zipfile.ZipFile(zipname, "w", zipfile.ZIP_DEFLATED)
 		size=0
 		for f in zipdir.filelist:
 			st=os.lstat(f)
@@ -75,7 +78,7 @@ class ZipDir(object):
 		result.close()
 		indexname="%sbookindex"%self.destdir
 		pickle.dump(bookindex, open(indexname,"wb"))
-		
+
 if __name__=="__main__":
 	DirName="G:\\standardlib\\"
 	DestName="G:\\"
