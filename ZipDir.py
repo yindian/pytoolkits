@@ -41,8 +41,8 @@ class ZipDir(object):
 		self.dirname=name
 		self.destdir=destdir
 		self.filelist=[]
-		self.FILESIZELIMIT=950000
-		
+		self.FILESIZELIMIT=500000
+
 	def getFileList(self):
 		self.filelist=[]
 		self.TraverseDir(self.dirname)
@@ -80,7 +80,7 @@ class ZipDir(object):
 		pickle.dump(bookindex, open(indexname,"wb"))
 
 if __name__=="__main__":
-	DirName="G:\\standardlib\\"
-	DestName="G:\\"
+	DirName="G:\\ebooks\\intro2algorithms\\"
+	DestName="G:\\ebooks\\"
 	zipdir=ZipDir(DirName,DestName)
 	zipdir.dumpzip()
