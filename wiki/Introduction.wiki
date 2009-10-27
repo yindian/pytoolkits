@@ -4,6 +4,7 @@
 = Contents =
   * [wxPKUIPGW]: A client to login IP gateway of Peking University.
   * [ZipDir]: A tool to zip a directory with result size limit and index.
+  * [HiBaiduAlbumDownloader]: A tool to download images from baidu space.
 
   == Windows ==
   * [WindowsTime]: A tool to show how long a windows has been installed.
