@@ -82,6 +82,16 @@ class HiBaiduAlbumDownloader(object):
 		"""
 		self.username=user
 		self.persistencer=None
+		self.logger=None
+
+	def getlogger():
+		logger = logging.getLogger()
+		hdlr = logging.FileHandler("log.log")
+		formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+		hdlr.setFormatter(formatter)
+		logger.addHandler(hdlr)
+		logger.setLevel(logging.NOTSET)
+		return logger
 	
 	def setPersistence(self, p):
 		self.persistencer=p
@@ -131,7 +141,7 @@ class HiBaiduAlbumDownloader(object):
 			while retry:
 				retry=False
 				try:
-					indexi="http://hi.baidu.com%s/index/%d"%(albumname,i)
+					indexi="http://hi.baidu.com/%s/ablum/%s/index/%d"%(self.username,albumname,i)
 					i+=1
 					sys.stderr.write("/%s/album/.+?/index/%d\n"%(self.username,i))
 					nextpatt=re.compile("/%s/album/.+?/index/%d"%(self.username,i))
