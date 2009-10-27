@@ -1,0 +1,22 @@
+= Introduction =
+
+A tool to download images from baidu space.
+
+
+= Usage =
+
+= Download =
+
+Please go to [http://code.google.com/p/pytoolkits/downloads/list downloads]
+
+= Trouble Shootting =
+
+Please go to [http://code.google.com/p/pytoolkits/issues/list issues]
+
+= Updates =
+
+
+
+For bugs report or feature suggest, please go to [http://code.google.com/p/pytoolkits/issues/list issues].
+
+See Also [http://code.google.com/p/toolkits/wiki/HiBaiduAlbumDownloader the C# Version]
