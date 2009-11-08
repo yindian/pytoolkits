@@ -29,60 +29,27 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 '''
 
-import zipfile
-import os
-import pickle
+import MultiPartUpload
 
-class ZipDir(object):
+class MultiUpload(object):
 	"""
-	zip a directory to splited zip files, with indexes
+	upload files or directories.
 	"""
-	def __init__(self,name,destdir):
-		self.dirname=name
-		self.destdir=destdir
-		self.filelist=[]
-		self.FILESIZELIMIT=500000
+	def UploadDir(self,dir):
+		files = os.listdir(dir)
+		for filename in files:
+			filenames=filename.split(".")
+			if len(filenames)>1 and filenames[1]=="zip":
+				#print filename.decode("gbk")
+				self.UploadFile(filename)
 
-	def getFileList(self):
-		self.filelist=[]
-		self.TraverseDir(self.dirname)
-		return self.filelist
+	def UploadFile(self,name):
+		fields=[("bookid","7"),("type","data")]
+		files=[("datafile", name, open(name,"rb").read())]	
+		ret = MultiPartUpload.MultiPartUpload("http://linxh.appspot.com/ebooks/upload",
+											 fields, files)
+		print ret.read()
 	
-	def TraverseDir(self,dir):
-		for (dirpath,dirnames,filenames) in os.walk(dir):
-			for filename in filenames:
-				self.filelist.append(os.path.join(dirpath,filename))
-	
-	def dumpzip(self):
-		filelist=self.getFileList()
-		bookindex={}
-		index=0
-		zipname="%s%d.zip"%(self.destdir,index)
-		result=zipfile.ZipFile(zipname, "w", zipfile.ZIP_DEFLATED)
-		size=0
-		for f in zipdir.filelist:
-			st=os.lstat(f)
-			if st.st_size+size < self.FILESIZELIMIT:
-				# IMPORTANT CODE 
-				arc=f.replace(self.dirname, "")
-				arc=arc.split(os.sep)
-				arc="/".join(arc)
-				# IMPORTANT CODE 
-				result.write(f,arc)
-				bookindex[arc]=index
-				size+=st.st_size
-			else:
-				result.close()
-				index+=1
-				zipname="%s%d.zip"%(self.destdir,index)
-				result=zipfile.ZipFile(zipname, "w")
-				size=0
-		result.close()
-		indexname="%sbookindex"%self.destdir
-		pickle.dump(bookindex, open(indexname,"wb"))
-
-if __name__=="__main__":
-	DirName = ""
-	DestName = ""
-	zipdir = ZipDir(DirName,DestName)
-	zipdir.dumpzip()
+if __name__ == "__main__":
+	mp = MultiUpload()
+	mp.UploadDir(".")

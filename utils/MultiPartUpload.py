@@ -66,34 +66,10 @@ def encode_multipart_formdata(fields, files):
 def get_content_type(filename):
     return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
 
-class MultiUpload(object):
-	"""
-	test class
-	upload files or directories.
-	"""
-	def __init__(self):
-		self.host = ""
-		self.url = ""
-
-	def UploadDir(self,dir):
-		files = os.listdir(dir)
-		for filename in files:
-			filenames=filename.split(".")
-			if len(filenames)>1 and filenames[1]=="zip":
-				#print filename.decode("gbk")
-				self.UploadFile(filename)
-
-	def UploadFile(self,name):
-		cookies = urllib2.HTTPCookieProcessor()
-		opener = urllib2.build_opener(cookies)
-		fields=[("bookid","1"),("type","data")]
-		files=[("datafile", name, open(name,"rb").read())]
-		content_type, body = encode_multipart_formdata(fields, files)
-		req=urllib2.Request("http://linxh.appspot.com/ebooks/upload",None,{'Content-type':'%s' % content_type})
-		ret=opener.open(req,body)
-		print len(urllib.quote(name))
-		print ret.read()
-
-if __name__ == "__main__":
-	mp=MultiUpload()
-	mp.UploadDir(".")
+def MultiPartUpload(url, fields, files):
+	cookies = urllib2.HTTPCookieProcessor()
+	opener = urllib2.build_opener(cookies)
+	content_type, body = encode_multipart_formdata(fields, files)
+	req = urllib2.Request(url, None, {'Content-type':'%s' % content_type})
+	ret = opener.open(req,body)
+	return ret
